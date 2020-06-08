@@ -2,7 +2,13 @@
     {
         "path":"/",
         "methods":["GET", "POST"],
-        "d_address":"{destination address}",
-        "d_method":"{destination method}"
+        "d_address":"http://www.naver.com",
+        "d_method":"GET"
+    },
+    {
+        "path":"/test",
+        "methods":["POST"],
+        "d_address":"http://www.naver.com",
+        "d_method":"GET"
     }
 ]
