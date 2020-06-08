@@ -5,7 +5,7 @@ import uvicorn
 import random
 import requests
 
-from fluffy_parakeet.apis import create_api
+from fluffy_parakeet.create_apis import create_api
 from fastapi import FastAPI
 from starlette.endpoints import HTTPEndpoint
 from fluffy_parakeet.json_parser import json_parser
