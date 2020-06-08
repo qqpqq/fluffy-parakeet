@@ -11,21 +11,23 @@ from starlette.endpoints import HTTPEndpoint
 
 
 class FluffyParakeet(object):
-    def __init__(self):
-        self.app = FastAPI()
-        self.route = []
+    def __init__(self) -> None:
+        self.app: FastAPI = FastAPI()
+        self.routes: list = [{"path":"/", "methods":["GET"],"d_address":"http://www.naver.com", "d_method":"GET"},
+            {"path":"/test", "methods":["POST"], "d_address":"http://www.naver.com", "d_method:":"POST"}]
 
-    def get_app(self):
+    def get_app(self) -> FastAPI:
         return self.app
 
-    def run(self, host="127.0.0.1", port=8000):
-        self.set_route([{"path":"/", "methods":["GET"],"d_address":"http://www.naver.com"},{"path":"/test", "methods":["POST"], "d_address":"http://www.naver.com"}])
+    def run(self, host="127.0.0.1": str, port=8000: int) -> None:
+        self.register_routes(self.routes)
+        
         uvicorn.run(self.app, host=host, port=port)
 
-    def set_route(self, routes: list):
+    def register_routes(self, routes: list) -> None:
         for route in routes:
             hash = hex(random.getrandbits(int(str(time.time())[-3:-1])))[4:]
-            api = create_api(route["d_address"])
+            api = create_api(route["d_address"], route["d_method"])
 
             self.app.add_api_route(
                 path = route["path"],

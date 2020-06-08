@@ -1,0 +1,8 @@
+[
+    {
+        "path":"/",
+        "methods":["GET", "POST"],
+        "d_address":"{destination address}",
+        "d_method":"{destination method}"
+    }
+]
