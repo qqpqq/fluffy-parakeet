@@ -19,21 +19,22 @@ def create_api(destination_address: str, method: str):
 
         headers["host"] = destination_address
 
-        timeout = aiohttp.ClientTimeout(total=json_parser("fluffy_parakeet/config.json")["timeout"])
+        timeout = aiohttp.ClientTimeout(
+            total=json_parser("fluffy_parakeet/config.json")["timeout"]
+        )
 
         try:
             async with aiohttp.request(
-                method=req.method, 
-                url=destination_address, 
-                headers=headers, 
+                method=req.method,
+                url=destination_address,
+                headers=headers,
                 data=await req.body(),
-                timeout=timeout) as resp:
+                timeout=timeout,
+            ) as resp:
 
                 return await resp.text()
         except:
             circuit_breaker(destination_address)
             raise BrokenCircuit
 
-
     return api
-
