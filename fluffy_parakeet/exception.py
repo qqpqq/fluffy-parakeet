@@ -1,8 +1,6 @@
-class BreakedCircuit(Exception):
-    def __str__(self):
-        return "This circuit is breaked."
+from fastapi import HTTPException
 
 
-class Timeout(Exception):
-    def __str__(self):
-        return "Timeout"
+class BrokenCircuit(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=403, detail="circuit has broken")
