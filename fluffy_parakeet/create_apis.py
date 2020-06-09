@@ -25,7 +25,7 @@ def create_api(destination_address: str, method: str):
 
         try:
             async with aiohttp.request(
-                method=req.method,
+                method=method,
                 url=destination_address,
                 headers=headers,
                 data=await req.body(),
