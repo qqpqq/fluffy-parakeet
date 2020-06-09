@@ -3,18 +3,9 @@ import asyncio
 
 from typing import Callable
 from fluffy_parakeet.json_parser import json_parser
-
+from fluffy_parakeet.exception import BreakedCircuit, Timeout
 
 breaked_circuit = []
 
-async def circuit_breaker(future):
-    config = json_parser("fluffy_parakeet/config.json")
-    try:
-        print(type(future), future)
-        res = await asyncio.wait_for(future(), timeout=config["error_time"])
-    except asyncio.TimeoutError:
-        future.cancle()
-        return None
-
-    print(res)
-    return res
+def circuit_breaker(destination_address):
+    breaked_circuit.append(destination_address)

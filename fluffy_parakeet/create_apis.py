@@ -1,8 +1,11 @@
 import asyncio
+import aiohttp
 import requests
 
 from fastapi import Request, Response
-from fluffy_parakeet.circuit_breaker import circuit_breaker
+from fluffy_parakeet.circuit_breaker import circuit_breaker, breaked_circuit
+from fluffy_parakeet.json_parser import json_parser
+from fluffy_parakeet.exception import BreakedCircuit
 
 
 def create_api(destination_address: str, method: str):
@@ -11,20 +14,26 @@ def create_api(destination_address: str, method: str):
         for i in req._headers._list:
             headers[i[0].decode()] = i[1].decode()
 
+        if destination_address in breaked_circuit:
+            raise BreakedCircuit
+
         headers["host"] = destination_address
 
-        payload = await req.body()
-        request = requests.Request(req.method, destination_address, headers=headers)
-        request = request.prepare()
-        request.body = payload
+        timeout = aiohttp.ClientTimeout(total=json_parser("fluffy_parakeet/config.json")["timeout"], )
 
-        async def send_data():
-            s = requests.session()
-            return s.send(request)
+        try:
+            async with aiohttp.request(
+                method=req.method, 
+                url=destination_address, 
+                headers=headers, 
+                data=await req.body(),
+                timeout=timeout) as resp:
 
-        res = await circuit_breaker(send_data)
-        
-        return res.text
+                return await resp.text()
+        except:
+            circuit_breaker(destination_address)
+            raise BreakedCircuit
+
 
     return api
 
