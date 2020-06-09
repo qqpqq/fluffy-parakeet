@@ -1,3 +1,4 @@
+import asyncio
 import requests
 
 from fastapi import Request, Response
@@ -16,12 +17,14 @@ def create_api(destination_address: str, method: str):
         request = requests.Request(req.method, destination_address, headers=headers)
         request = request.prepare()
         request.body = payload
+
+        async def send_data():
+            s = requests.session()
+            return s.send(request)
+
+        res = await circuit_breaker(send_data)
         
-        s = requests.session()
-
-        # res = circuit_breaker(s.send(request))
-        res = s.send(request)
-
         return res.text
 
     return api
+
