@@ -1,6 +1,7 @@
 import requests
 
 from fastapi import Request, Response
+from fluffy_parakeet.circuit_breaker import circuit_breaker
 
 
 def create_api(destination_address: str, method: str):
@@ -17,6 +18,8 @@ def create_api(destination_address: str, method: str):
         request.body = payload
         
         s = requests.session()
+
+        # res = circuit_breaker(s.send(request))
         res = s.send(request)
 
         return res.text
