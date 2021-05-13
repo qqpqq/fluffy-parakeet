@@ -19,7 +19,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 multidict==4.7.6
 pathspec==0.8.0
-pydantic==1.5.1
+pydantic==1.6.2
 pylint==2.5.2
 regex==2020.6.8
 requests==2.23.0
